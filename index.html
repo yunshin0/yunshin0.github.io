@@ -40,6 +40,8 @@
     </form>
 
     <h2>결과:</h2>
+    <p>지금까지 사용한 솔 에르다: <span id="usedScore"></span></p>
+    <p>지금까지 사용한 솔 에르다 조각: <span id="usedScorePiece"></span></p>
     <p>스킬코어에 사용된 솔 에르다: <span id="skillSol"></span></p>
     <p>스킬코어에 사용된 솔 에르다 조각: <span id="skillSolPiece"></span></p>
     <p>마스터리코어에 사용된 솔 에르다: <span id="masterySol"></span></p>
@@ -88,6 +90,8 @@
             { skill: [20, 500], mastery: [10, 250], enhancement: [15, 375] }
         ];
         function calculate() {
+            let UsedSolErda = parseInt(document.getElementById('usedScore').value);
+            let UsedSolErdaPiece = parseInt(document.getElementById('usedScorePiece').value);
             let skillLevel = parseInt(document.getElementById('skillScore').value);
             let masteryLevel = parseInt(document.getElementById('masteryScore').value);
             
@@ -97,7 +101,7 @@
                 parseInt(document.getElementById('enhancementScore3').value),
                 parseInt(document.getElementById('enhancementScore4').value)
             ];
-
+            let usedScore = 0, usedScorePiece = 0;
             let skillSol = 0, skillSolPiece = 0;
             let masterySol = 0, masterySolPiece = 0;
             let enhancementSols = [0, 0, 0, 0], enhancementSolPieces = [0, 0, 0, 0];
@@ -118,7 +122,10 @@
                     enhancementSolPieces[j] += data[i].enhancement[1];
                 }
             }
-
+            usedScore = skillSol + masterySol + enhancementSols[0] + enhancementSols[1] + enhancementSols[2] + enhancementSols[3];
+            usedScorePiece = skillSolPiece + masterySolPiece + enhancementSolPieces[0] + enhancementSolPieces[1] + enhancementSolPieces[2] + enhancementSolPieces[3];
+            document.getElementById('usedScore').textContent = usedScore;
+            document.getElementById('usedScorePiece').textContent = usedScorePiece;
             document.getElementById('skillSol').textContent = skillSol;
             document.getElementById('skillSolPiece').textContent = skillSolPiece;
             document.getElementById('masterySol').textContent = masterySol;
