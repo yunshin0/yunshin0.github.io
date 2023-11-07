@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Calculator</title>
+    <script>
+    function calculate() {
+        // 사용자 입력 가져오기
+        const number1 = parseFloat(document.getElementById('number1').value);
+        const number2 = parseFloat(document.getElementById('number2').value);
+    
+        // 계산 수행
+        const result = number1 + number2; // 예시: 두 숫자를 더함
+    
+        // 결과를 HTML에 반환
+        const resultElement = document.getElementById('result');
+        resultElement.textContent = '계산 결과: ' + result;
+    }
+    </script>
+</head>
+<body>
+    <input type="number" id="number1" placeholder="숫자 1">
+    <input type="number" id="number2" placeholder="숫자 2">
+    <button onclick="calculate()">계산</button>
+    <p id="result">계산 결과: </p>
+    <script src="script.js"></script>
+</body>
+</html>
