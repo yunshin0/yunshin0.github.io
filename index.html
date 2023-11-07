@@ -1,140 +1,75 @@
 <!DOCTYPE html>
-<html lang="ko">
-
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>코어 레벨에 따른 소모량 계산</title>
-</head>
-
-<body>
-    <form id="coreForm">
-        <div>
-            <label for="skillScore">스킬코어 레벨:</label>
-            <input type="number" id="skillScore" name="skillScore" min="0" max="30" required>
-        </div>
-        <div>
-            <label for="masteryScore">마스터리코어 레벨:</label>
-            <input type="number" id="masteryScore" name="masteryScore" min="0" max="30" required>
-        </div>
-        <div>
-            <label for="enhancementScore1">강화코어 레벨 1:</label>
-            <input type="number" id="enhancementScore1" name="enhancementScore1" min="0" max="30" required>
-        </div>
-        <div>
-            <label for="enhancementScore2">강화코어 레벨 2:</label>
-            <input type="number" id="enhancementScore2" name="enhancementScore2" min="0" max="30" required>
-        </div>
-        <div>
-            <label for="enhancementScore3">강화코어 레벨 3:</label>
-            <input type="number" id="enhancementScore3" name="enhancementScore3" min="0" max="30" required>
-        </div>
-        <div>
-            <label for="enhancementScore4">강화코어 레벨 4:</label>
-            <input type="number" id="enhancementScore4" name="enhancementScore4" min="0" max="30" required>
-        </div>
-        <div>
-            <input type="button" value="계산하기" onclick="calculate()">
-        </div>
-    </form>
-
-    <h2>결과:</h2>
-    <p>지금까지 사용한 솔 에르다: <span id="usedScore"></span></p>
-    <p>지금까지 사용한 솔 에르다 조각: <span id="usedScorePiece"></span></p>
-    <p>스킬코어에 사용된 솔 에르다: <span id="skillSol"></span></p>
-    <p>스킬코어에 사용된 솔 에르다 조각: <span id="skillSolPiece"></span></p>
-    <p>마스터리코어에 사용된 솔 에르다: <span id="masterySol"></span></p>
-    <p>마스터리코어에 사용된 솔 에르다 조각: <span id="masterySolPiece"></span></p>
-    <p>강화코어 1에 사용된 솔 에르다: <span id="enhancementSol1"></span></p>
-    <p>강화코어 1에 사용된 솔 에르다 조각: <span id="enhancementSolPiece1"></span></p>
-    <p>강화코어 2에 사용된 솔 에르다: <span id="enhancementSol2"></span></p>
-    <p>강화코어 2에 사용된 솔 에르다 조각: <span id="enhancementSolPiece2"></span></p>
-    <p>강화코어 3에 사용된 솔 에르다: <span id="enhancementSol3"></span></p>
-    <p>강화코어 3에 사용된 솔 에르다 조각: <span id="enhancementSolPiece3"></span></p>
-    <p>강화코어 4에 사용된 솔 에르다: <span id="enhancementSol4"></span></p>
-    <p>강화코어 4에 사용된 솔 에르다 조각: <span id="enhancementSolPiece4"></span></p>
-
-    <script>
-        // 데이터 배열 (위에서 제공한 정보를 기반으로 함)
- const data = [
-            { skill: [0, 0], mastery: [3, 50], enhancement: [4, 75] },
-            { skill: [1, 30], mastery: [1, 15], enhancement: [1, 23] },
-            { skill: [1, 35], mastery: [1, 18], enhancement: [1, 27] },
-            { skill: [1, 40], mastery: [1, 20], enhancement: [1, 30] },
-            { skill: [2, 45], mastery: [1, 23], enhancement: [2, 34] },
-            { skill: [2, 50], mastery: [1, 25], enhancement: [2, 38] },
-            { skill: [2, 55], mastery: [1, 28], enhancement: [2, 42] },
-            { skill: [3, 60], mastery: [2, 30], enhancement: [3, 45] },
-            { skill: [3, 65], mastery: [2, 33], enhancement: [3, 49] },
-            { skill: [10, 200], mastery: [5, 100], enhancement: [8, 150] },
-            { skill: [3, 80], mastery: [2, 40], enhancement: [3, 60] },
-            { skill: [3, 90], mastery: [2, 45], enhancement: [3, 68] },
-            { skill: [4, 100], mastery: [2, 50], enhancement: [3, 75] },
-            { skill: [4, 110], mastery: [2, 55], enhancement: [3, 83] },
-            { skill: [4, 120], mastery: [2, 60], enhancement: [3, 90] },
-            { skill: [4, 130], mastery: [2, 65], enhancement: [3, 98] },
-            { skill: [4, 140], mastery: [2, 70], enhancement: [3, 105] },
-            { skill: [4, 150], mastery: [2, 75], enhancement: [3, 113] },
-            { skill: [5, 160], mastery: [3, 80], enhancement: [4, 120] },
-            { skill: [15, 350], mastery: [8, 175], enhancement: [12, 263] },
-            { skill: [5, 170], mastery: [3, 85], enhancement: [4, 128] },
-            { skill: [5, 180], mastery: [3, 90], enhancement: [4, 135] },
-            { skill: [5, 190], mastery: [3, 95], enhancement: [4, 143] },
-            { skill: [5, 200], mastery: [3, 100], enhancement: [4, 150] },
-            { skill: [5, 210], mastery: [3, 105], enhancement: [4, 158] },
-            { skill: [6, 220], mastery: [3, 110], enhancement: [5, 165] },
-            { skill: [6, 230], mastery: [3, 115], enhancement: [5, 173] },
-            { skill: [6, 240], mastery: [3, 120], enhancement: [5, 180] },
-            { skill: [7, 250], mastery: [4, 125], enhancement: [6, 188] },
-            { skill: [20, 500], mastery: [10, 250], enhancement: [15, 375] }
-        ];
-        function calculate() {
-            let UsedSolErda = parseInt(document.getElementById('usedScore').value);
-            let UsedSolErdaPiece = parseInt(document.getElementById('usedScorePiece').value);
-            let skillLevel = parseInt(document.getElementById('skillScore').value);
-            let masteryLevel = parseInt(document.getElementById('masteryScore').value);
-            
-            let enhancementLevels = [
-                parseInt(document.getElementById('enhancementScore1').value),
-                parseInt(document.getElementById('enhancementScore2').value),
-                parseInt(document.getElementById('enhancementScore3').value),
-                parseInt(document.getElementById('enhancementScore4').value)
-            ];
-            let usedScore = 0, usedScorePiece = 0;
-            let skillSol = 0, skillSolPiece = 0;
-            let masterySol = 0, masterySolPiece = 0;
-            let enhancementSols = [0, 0, 0, 0], enhancementSolPieces = [0, 0, 0, 0];
-
-            for (let i = 0; i < skillLevel; i++) {
-                skillSol += data[i].skill[0];
-                skillSolPiece += data[i].skill[1];
-            }
-
-            for (let i = 0; i < masteryLevel; i++) {
-                masterySol += data[i].mastery[0];
-                masterySolPiece += data[i].mastery[1];
-            }
-
-            for (let j = 0; j < 4; j++) {
-                for (let i = 0; i < enhancementLevels[j]; i++) {
-                    enhancementSols[j] += data[i].enhancement[0];
-                    enhancementSolPieces[j] += data[i].enhancement[1];
-                }
-            }
-            usedScore = skillSol + masterySol + enhancementSols[0] + enhancementSols[1] + enhancementSols[2] + enhancementSols[3];
-            usedScorePiece = skillSolPiece + masterySolPiece + enhancementSolPieces[0] + enhancementSolPieces[1] + enhancementSolPieces[2] + enhancementSolPieces[3];
-            document.getElementById('usedScore').textContent = usedScore;
-            document.getElementById('usedScorePiece').textContent = usedScorePiece;
-            document.getElementById('skillSol').textContent = skillSol;
-            document.getElementById('skillSolPiece').textContent = skillSolPiece;
-            document.getElementById('masterySol').textContent = masterySol;
-            document.getElementById('masterySolPiece').textContent = masterySolPiece;
-            for (let j = 1; j <= 4; j++) {
-                document.getElementById(`enhancementSol${j}`).textContent = enhancementSols[j-1];
-                document.getElementById(`enhancementSolPiece${j}`).textContent = enhancementSolPieces[j-1];
-            }
+    <title>헥사 매트릭스 도우미</title>
+    <style>
+        body{
+            background-color: rgb(31, 32, 35);
         }
-    </script>
+        #thema{
+            background-color: #b58bed;
+            font-size: 55px;
+            color: azure;
+            
+        }
+        #job{
+            position: absolute;
+            top: 7%;
+            left : 2%;
+        }
+        @font-face {
+            font-family: 'MaplestoryOTFBold';
+            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/MaplestoryOTFBold.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+        body{
+            margin: 0px;
+            font-family: 'MaplestoryOTFBold';
+        }
+        ul{
+            list-style: none;
+            text-align: center;
+            border-top: 1px solid red;
+            border-bottom: 1px solid red;
+            padding: 10px 0;
+        }
+        ul li{
+            display: inline;
+            text-transform: uppercase;
+            padding: 0 10px;
+            letter-spacing: 10px;
+        }
+        ul li a {
+            text-decoration: none;
+            color: azure;
+        }
+        ul li a:hover{
+            text-decoration: underline;
+        }
+        #detail{
+            margin: 0;
+            width: 100%;
+            height: 100%;
+
+
+        }
+    </style>
+
+</head>
+<body>
+    <h1 align="center" id = 'thema'>
+        <img src = hexa_icon.png align = "center">헥사 매트릭스 도우미<img src = hexa_icon.png align = "center">
+    </h1>
+    <ul>
+        <li><a href = "explain.html" target="myiframe">1.헥사 매트릭스란?</a></li>
+        <li><a href = "enforce_status.html" target="myiframe">2.강화 현황</a></li>
+        <li><a href = "boss_drop.html" target="myiframe">3.보스별 솔 에르다 드랍?</a></li>
+        <li><a href = "enforce_material.html" target="myiframe">4.레벨별 강화 재료</a></li>
+    </ul>
+
+    <iframe src = "" name = "myiframe" frameborder = ' scrolling = 'no' width=100% height=940px;></iframe>
 </body>
 </html>
